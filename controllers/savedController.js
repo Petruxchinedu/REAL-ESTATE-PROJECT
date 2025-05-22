@@ -37,3 +37,16 @@ exports.getSavedProperties = async (req, res) => {
     res.status(500).json({ message: 'Fetch saved properties failed', error: error.message });
   }
 };
+exports.unsaveProperty = async (req, res) => {
+  try {
+    const { propertyId } = req.body;
+    if (!propertyId) return res.status(400).json({ message: 'propertyId required' });
+
+    const deleted = await SavedProperty.findOneAndDelete({ user: req.user._id, property: propertyId });
+    if (!deleted) return res.status(404).json({ message: 'Saved property not found' });
+
+    res.json({ message: 'Property unsaved successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Unsave failed', error: error.message });
+  }
+};

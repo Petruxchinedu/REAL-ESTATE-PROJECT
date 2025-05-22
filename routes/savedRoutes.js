@@ -5,5 +5,7 @@ const { authenticateToken } = require('../middlewares/authmiddleware');
 
 router.post('/', authenticateToken, savedController.saveProperty);
 router.get('/', authenticateToken, savedController.getSavedProperties);
+router.delete('/', authenticateToken, savedController.unsaveProperty); 
 
 module.exports = router;
+

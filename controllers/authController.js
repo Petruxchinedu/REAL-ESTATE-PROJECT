@@ -13,13 +13,12 @@ const generateRefreshToken = (user) => {
 };
 
 exports.register = async (req, res) => {
- console.log('Request Body:', req.body);
   try {
     const { username, email, password, role } = req.body;
-    if (!username || !email || !password || !role)
+    if (!username || !email || !password )
       return res.status(400).json({ message: 'All fields are required' });
-    if (!['agent', 'user'].includes(role))
-      return res.status(400).json({ message: 'Role must be agent or user' });
+    // if (!['agent', 'user'].includes(role))
+    //   return res.status(400).json({ message: 'Role must be agent or user' });
 
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: 'Email already registered' });
@@ -38,7 +37,7 @@ exports.register = async (req, res) => {
       message: 'Registered successfully',
       accessToken,
       refreshToken,
-      user: { id: user._id, username, email, role }
+      user: { id: user?._id, username, email, role }
     });
   } catch (error) {
     res.status(500).json({ message: 'Registration failed', error: error.message });
@@ -67,7 +66,7 @@ exports.login = async (req, res) => {
       message: 'Login successful',
       accessToken,
       refreshToken,
-      user: { id: user._id, username: user.username, email, role: user.role }
+      user: { id: user?._id, username: user?.username, email, role: user?.role }
     });
   } catch (error) {
     res.status(500).json({ message: 'Login failed', error: error.message });
@@ -80,6 +79,9 @@ exports.refreshToken = async (req, res) => {
     if (!refreshToken) return res.status(401).json({ message: 'Refresh token required' });
 
     const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    if(!payload){
+       return res.status(401).json({ message: 'please login' });
+    }
     const user = await User.findById(payload.id);
     if (!user || user.refreshToken !== refreshToken)
       return res.status(403).json({ message: 'Invalid refresh token' });
