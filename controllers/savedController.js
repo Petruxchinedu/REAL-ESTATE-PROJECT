@@ -26,6 +26,14 @@ exports.saveProperty = async (req, res) => {
 
 exports.getSavedProperties = async (req, res) => {
   try {
+
+    const { filters } = req.query; 
+    const query = { user: req.user._id };
+    // Apply filters if provided
+    if (filters) {
+      const filterObj = JSON.parse(filters); 
+      Object.assign(query, filterObj); 
+    }
     const savedProperties = await SavedProperty.find({ user: req.user._id })
       .populate({
         path: 'property',
