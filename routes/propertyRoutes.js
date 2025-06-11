@@ -6,5 +6,6 @@ const { authenticateToken, authorizeAgent } = require('../middlewares/authmiddle
 router.post('/', authenticateToken, authorizeAgent, propertyController.createProperty);
 router.get('/', propertyController.getAllProperties);
 router.get('/:id', propertyController.getPropertyById);
+router.get('/', propertyController.updateUserRole);
 
 module.exports = router;

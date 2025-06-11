@@ -40,4 +40,19 @@ exports.getPropertyById = async (req, res) => {
     res.status(500).json({ message: 'Fetch failed', error: error.message });
   }
 };
+exports.updateUserRole = async (req, res) => {
+  try {
+    const { id, role } = req.body;
 
+    if (!['user', 'admin', 'agent'].includes(role)) {
+      return res.status(400).json({ msg: 'Invalid role type.' });
+    }
+
+    await Users.findByIdAndUpdate(id, { role });
+
+    res.status(200).json({ msg: `User role updated to '${role}'.` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: err.message });
+  }
+}
