@@ -1,8 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const transactionController = require('../controllers/transactionController');
+const { initiatePayment, verifyWebhook, getUserTransactions, getAllTransactions } = require("../controllers/transactionController");
+const auth = require("../middlewares/auth");
+const admin = require("../middlewares/admin");
 
-router.post('/', transactionController.create);
-router.get('/', transactionController.getAll);
+// INITIATE PAYMENT
+router.post("/pay", auth, initiatePayment);
+
+// PAYSTACK WEBHOOK
+router.post("/webhook", verifyWebhook);
+
+// GET MY TRANSACTIONS
+router.get("/my", auth, getUserTransactions);
+
+// GET ALL TRANSACTIONS (ADMIN)
+router.get("/", auth, admin, getAllTransactions);
 
 module.exports = router;

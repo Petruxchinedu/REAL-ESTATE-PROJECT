@@ -18,8 +18,13 @@ const savedRoutes = require('./routes/savedRoutes');
 
 
 const app = express();
-
-app.use(cors());
+const allowedOrigin = "http://localhost:5173";
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true, // allow cookies, auth headers
+  })
+);
 // app.use(cookieParser())
 app.use(express.json());
 
