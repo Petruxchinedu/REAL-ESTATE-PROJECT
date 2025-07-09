@@ -1,6 +1,6 @@
 const PropertyImage = require('../models/PropertyImage');
 const Property = require('../models/propertyModel');
-// Create Property Image
+
 exports.create = async (req, res) => {
   try {
     const { property, imageUrl, caption } = req.body;
