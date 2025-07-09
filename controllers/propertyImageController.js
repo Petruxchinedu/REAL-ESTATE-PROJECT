@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
       return res.status(400).json({ error: 'Property and image URL are required.' });
     }
 
-    // 1. Save image to PropertyImage model
+    // 1. Save image to PropertyImage-model
     const propertyImage = new PropertyImage({ property, imageUrl, caption });
     await propertyImage.save();
 
