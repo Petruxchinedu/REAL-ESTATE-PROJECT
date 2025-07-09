@@ -2,7 +2,7 @@ const Property = require('../models/propertyModel');
 
 exports.createProperty = async (req, res) => {
   try {
-    const { title, location, price } = req.body;
+    const { title, location, price, coverImage } = req.body;
     if (!title || !location || price == null)
       return res.status(400).json({ message: 'All fields required' });
 
@@ -12,6 +12,7 @@ exports.createProperty = async (req, res) => {
       title,
       location,
       price,
+       coverImage,
       agent: req.user._id
     });
 
