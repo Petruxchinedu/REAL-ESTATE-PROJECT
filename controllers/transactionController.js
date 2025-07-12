@@ -1,5 +1,5 @@
 const Transaction = require("../models/Transaction");
-const Property = require("../models/Property");
+const Property = require("../models/propertyModel");
 const axios = require("axios");
 const crypto = require("crypto");
 const Joi = require("joi");

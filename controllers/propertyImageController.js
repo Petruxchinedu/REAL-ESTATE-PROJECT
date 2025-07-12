@@ -1,38 +1,28 @@
 const PropertyImage = require('../models/PropertyImage');
 const Property = require('../models/propertyModel');
 
-exports.create = async (req, res) => {
+exports.uploadImage = async (req, res) => {
   try {
-    const { property, imageUrl, caption } = req.body;
+    const { property, caption } = req.body;
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
-    if (!property || !imageUrl) {
-      return res.status(400).json({ error: 'Property and image URL are required.' });
-    }
+    const imageUrl = `/uploads/${req.file.filename}`;
 
-    // 1. Save image to PropertyImage-model
-    const propertyImage = new PropertyImage({ property, imageUrl, caption });
-    await propertyImage.save();
+    const newImage = new PropertyImage({ property, imageUrl, caption });
+    await newImage.save();
 
-    // 2. Check if property already has a coverImage
     const prop = await Property.findById(property);
-
     if (prop && !prop.coverImage) {
-      // 3. Set the first image as the coverImage
       prop.coverImage = imageUrl;
       await prop.save();
     }
 
-    res.status(201).json({
-      message: 'Image uploaded',
-      image: propertyImage,
-      coverImageUpdated: !prop.coverImage ? imageUrl : undefined
-    });
+    res.status(201).json({ message: "Image uploaded", imageUrl });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Get All Images for a Property
 exports.getAllForProperty = async (req, res) => {
   try {
     const { propertyId } = req.params;
@@ -43,7 +33,6 @@ exports.getAllForProperty = async (req, res) => {
   }
 };
 
-// Delete Property Image
 exports.delete = async (req, res) => {
   try {
     const image = await PropertyImage.findByIdAndDelete(req.params.id);
